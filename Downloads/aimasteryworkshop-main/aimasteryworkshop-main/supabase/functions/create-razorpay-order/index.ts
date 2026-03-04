@@ -37,7 +37,7 @@ serve(async (req) => {
         'Authorization': 'Basic ' + btoa(`${keyId}:${keySecret}`),
       },
       body: JSON.stringify({
-        amount: Math.round(amount), // amount in paise
+        amount: Math.round(amount),
         currency,
         receipt: receipt || `rcpt_${Date.now()}`,
         notes: notes || {},

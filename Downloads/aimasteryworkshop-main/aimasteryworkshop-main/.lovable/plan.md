@@ -1,29 +1,28 @@
 
 
-## Fix: Payment Not Redirecting After Successful Payment
+## Diagnosis
 
-### Problem
-After a successful Razorpay payment, the app calls the `verify-razorpay-payment` backend function, but this function appears to not be deployed (no logs exist). The verification fails silently, showing a "Payment verification failed" toast instead of redirecting to `/thank-you`.
+The backend function `save-to-google-sheet` returns `200 OK` with `{"success": true}` when called directly, meaning the function itself runs fine. However, data is not appearing in the Google Sheet. This means the **Google Apps Script web app** is either:
+- Returning an error silently (the function treats any response as success)
+- The Apps Script deployment URL has expired or changed
+- The Apps Script has a bug processing the incoming data
 
-### Solution
+## Plan
 
-**Step 1: Deploy the `verify-razorpay-payment` backend function**
-- The function code exists but needs to be deployed so it can process payment verification requests.
+### 1. Improve the edge function to detect Google-side failures
+Currently, the function always returns `{ success: true }` regardless of what Google responds. We need to:
+- Check the HTTP status from Google Apps Script
+- Parse and forward the actual Google response
+- Log the full response for debugging
 
-**Step 2: Add better error logging in the payment handler**
-- Update the `catch` block in `WorkshopRecap.tsx` to log the actual error for easier debugging.
-- Add a `console.error` before the error toast so issues are visible in logs.
+**File:** `supabase/functions/save-to-google-sheet/index.ts`
+- After fetching the Apps Script URL, check if `response.ok` is false and return an error
+- Include the Google response text in logs and in the returned response so failures are visible
 
-### Technical Details
+### 2. Verify/update the Google Apps Script URL
+The `GOOGLE_APPS_SCRIPT_URL` secret may point to an expired deployment. We'll ask you to verify the URL is current after the code fix is deployed.
 
-- **File: `supabase/functions/verify-razorpay-payment/index.ts`** — Already written correctly. Just needs deployment.
-- **File: `src/components/workshop/WorkshopRecap.tsx`** — Minor improvement to the error handling in the Razorpay success handler (line ~179) to log the actual error object, making future debugging easier.
-
-### Expected Result
-After deployment, the full flow will work:
-1. User fills form and clicks "Pay Securely"
-2. Razorpay checkout opens and payment is completed
-3. Payment is verified via the backend function
-4. Google Sheet is saved (async)
-5. Success toast appears and user is redirected to `/thank-you`
+### Technical details
+- Google Apps Script web apps redirect on POST (302 → final response). The current `fetch` follows redirects by default, but the final response may contain an error message that's being ignored.
+- The fix will parse the Google response text and check for success indicators before returning `{ success: true }`.
 

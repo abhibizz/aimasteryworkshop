@@ -5,7 +5,7 @@ const StickyBottomCTA = () =>
       onClick={() => document.getElementById("workshop-form")?.scrollIntoView({ behavior: "smooth" })}
       className="w-full bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold text-base glow-button hover:opacity-90 transition-all min-h-[52px]">
 
-        Register Now – ₹1
+        Register Now – ₹2,099/-
       </button>
     </div>
   </div>;

@@ -27,29 +27,76 @@ serve(async (req) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         timestamp: payload.timestamp || new Date().toISOString(),
-        firstName: payload.firstName || '',
-        lastName: payload.lastName || '',
+        name: payload.firstName ? `${payload.firstName} ${payload.lastName || ''}`.trim() : (payload.name || ''),
         email: payload.email || '',
         phone: payload.phone || '',
-        saturdayWorkshop: payload.saturdayWorkshop || '',
-        sundayWorkshop: payload.sundayWorkshop || '',
-        amount: payload.amount || 0,
+        workshop_day1: payload.saturdayWorkshop || payload.workshop_day1 || '',
+        workshop_day2: payload.sundayWorkshop || payload.workshop_day2 || '',
+        amount: payload.amount || '',
         paymentId: payload.paymentId || '',
         orderId: payload.orderId || '',
+        status: payload.status || '',
+        page: payload.landingPage || payload.page || '',
+        paymentMethod: payload.paymentMethod || '',
         utm_source: payload.utm_source || '',
         utm_medium: payload.utm_medium || '',
         utm_campaign: payload.utm_campaign || '',
         utm_term: payload.utm_term || '',
         utm_content: payload.utm_content || '',
-        landingPage: payload.landingPage || '',
       }),
     });
 
-    // Apps Script redirects on POST, follow it
     const text = await response.text();
-    console.log('Google Sheet response:', response.status, text);
+    console.log('Google Apps Script response status:', response.status);
+    console.log('Google Apps Script response body:', text);
+    console.log('Google Apps Script response URL (after redirects):', response.url);
 
-    return new Response(JSON.stringify({ success: true }), {
+    if (!response.ok) {
+      console.error('Google Apps Script returned non-OK status:', response.status, text);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'Google Apps Script error', 
+        status: response.status,
+        details: text.substring(0, 500),
+      }), {
+        status: 502,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Check if the response body indicates an error
+    let googleResult: any = null;
+    try {
+      googleResult = JSON.parse(text);
+    } catch {
+      // Response is not JSON — could be HTML error page
+      if (text.includes('Error') || text.includes('error') || text.includes('<!DOCTYPE')) {
+        console.error('Google Apps Script returned non-JSON error response:', text.substring(0, 500));
+        return new Response(JSON.stringify({ 
+          success: false, 
+          error: 'Google Apps Script returned invalid response',
+          details: text.substring(0, 500),
+        }), {
+          status: 502,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
+    if (googleResult && googleResult.status === 'error') {
+      console.error('Google Apps Script reported error:', JSON.stringify(googleResult));
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'Google Apps Script execution error',
+        details: googleResult,
+      }), {
+        status: 502,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    console.log('Successfully saved to Google Sheet');
+    return new Response(JSON.stringify({ success: true, googleResponse: googleResult }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {

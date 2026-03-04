@@ -13,7 +13,7 @@ const PricingSection = () => (
     <ScrollReveal>
       <div className="bg-card rounded-2xl card-shadow p-5 space-y-4">
         <div className="text-center">
-          <p className="text-4xl font-bold text-foreground">₹1</p>
+          <p className="text-4xl font-bold text-foreground">₹2,099/-</p>
           <p className="text-muted-foreground mt-1">+ 18% GST</p>
         </div>
 

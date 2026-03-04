@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Zap } from "lucide-react";
+import alenceLogo from "@/assets/alence-logo-2.png";
 
 const StickyNav = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -20,8 +20,7 @@ const StickyNav = () => {
     >
       <div className="max-w-[430px] mx-auto flex items-center justify-between py-3 px-5">
         <div className="flex items-center gap-2">
-          <Zap className="h-5 w-5 text-primary" />
-          <span className="font-bold text-foreground">AI Workshop</span>
+          <img src={alenceLogo} alt="Aylence" className="h-5" />
         </div>
         <button
           onClick={() => document.getElementById("workshop-form")?.scrollIntoView({ behavior: "smooth" })}

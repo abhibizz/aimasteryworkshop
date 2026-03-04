@@ -1,15 +1,17 @@
 import { CheckCircle, Calendar, Clock, MapPin, Award } from "lucide-react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 const recapItems = [
-  { icon: Calendar, label: "Date", value: "21–22 March 2026" },
-  { icon: Clock, label: "Time", value: "10:30 AM – 4:30 PM" },
-  { icon: MapPin, label: "Venue", value: "IIT Kanpur" },
-  { icon: Award, label: "Certificate", value: "Provided to all participants" },
-];
+{ icon: Calendar, label: "Date", value: "21–22 March 2026" },
+{ icon: Clock, label: "Time", value: "10:30 AM – 4:30 PM" },
+{ icon: MapPin, label: "Venue", value: "IIT Kanpur" },
+{ icon: Award, label: "Certificate", value: "Provided to all participants" }];
+
 
 const ThankYou = () => {
+  usePageMeta("Registration Confirmed | AI Mastery Workshop", "Your registration is confirmed. See workshop details, venue info & what to bring for the AI Mastery Workshop at IIT Kanpur.");
   const navigate = useNavigate();
 
   return (
@@ -27,19 +29,19 @@ const ThankYou = () => {
           <div className="space-y-2">
             <h1 className="text-2xl font-bold text-foreground">Registration Confirmed! 🎉</h1>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Thank you for registering for the AI Mastery Workshop. A confirmation email has been sent to your inbox.
+              Thank you for registering for the AI Mastery Workshop. 
             </p>
           </div>
 
           <div className="bg-card rounded-xl p-5 card-shadow space-y-3 text-left">
             <h2 className="text-base font-semibold text-foreground">Workshop Details</h2>
-            {recapItems.map((item) => (
-              <div key={item.label} className="flex items-center gap-3">
+            {recapItems.map((item) =>
+            <div key={item.label} className="flex items-center gap-3">
                 <item.icon className="h-4 w-4 text-primary flex-shrink-0" />
                 <span className="text-sm text-muted-foreground">{item.label}:</span>
                 <span className="text-sm font-medium text-foreground">{item.value}</span>
               </div>
-            ))}
+            )}
           </div>
 
           <div className="bg-muted rounded-xl p-4 text-sm text-muted-foreground leading-relaxed">
@@ -49,14 +51,14 @@ const ThankYou = () => {
           <Button
             onClick={() => navigate("/")}
             variant="outline"
-            className="w-full h-12 rounded-xl"
-          >
+            className="w-full h-12 rounded-xl">
+
             Back to Home
           </Button>
         </div>
       </div>
-    </main>
-  );
+    </main>);
+
 };
 
 export default ThankYou;

@@ -28,7 +28,6 @@ serve(async (req) => {
       });
     }
 
-    // Verify signature using HMAC SHA256
     const message = `${razorpay_order_id}|${razorpay_payment_id}`;
     const encoder = new TextEncoder();
     const key = await crypto.subtle.importKey(

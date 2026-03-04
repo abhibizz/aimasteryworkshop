@@ -1,1 +1,19 @@
 project_id = "juretdltdwqgqlkfqbcg"
+
+[functions.create-razorpay-order]
+verify_jwt = false
+
+[functions.verify-razorpay-payment]
+verify_jwt = false
+
+[functions.save-to-google-sheet]
+verify_jwt = false
+
+[functions.send-payment-email]
+verify_jwt = false
+
+[functions.send-whatsapp-notification]
+verify_jwt = false
+
+[functions.meta-conversion-api]
+verify_jwt = false
