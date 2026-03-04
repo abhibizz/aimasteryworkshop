@@ -18,7 +18,7 @@ const AiForHrProfessionals = lazy(() => import("./pages/AiForHrProfessionals"));
 const DataScienceAnalytics = lazy(() => import("./pages/DataScienceAnalytics"));
 const CyberLanding = lazy(() => import("./pages/CyberLanding"));
 const CyberUpgrade = lazy(() => import("./pages/CyberUpgrade"));
-const CyberV2 = lazy(() => import("./pages/CyberV2"));
+const CyberV2 = lazy(() => import("./pages/Cyber"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const Disclaimer = lazy(() => import("./pages/Disclaimer"));
@@ -49,7 +49,7 @@ const App = () => (
             <Route path="/data-science-analytics" element={<><DataScienceAnalytics /><Footer /></>} />
             <Route path="/cyber" element={<><CyberLanding /><Footer /></>} />
             <Route path="/upgrade" element={<><CyberUpgrade /><Footer /></>} />
-            <Route path="/cyberV2" element={<><CyberV2 /><Footer /></>} />
+            <Route path="/cyber" element={<><CyberV2 /><Footer /></>} />
             <Route path="/thank-you" element={<><ThankYou /><Footer /></>} />
             <Route path="/payment-success" element={<><PaymentSuccess /><Footer /></>} />
             <Route path="/privacy-policy" element={<><PrivacyPolicy /><Footer /></>} />
